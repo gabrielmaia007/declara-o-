@@ -1,214 +1,220 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const paginas = document.querySelectorAll(".pagina");
 
-let particles = [];
-let width;
-let height;
+const numero = document.getElementById("numero");
 
-function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-}
+let atual = 0;
 
-window.addEventListener("resize", resize);
-resize();
 
-class Particle {
+/* =========================
+   VIRAR PÁGINA
+========================= */
 
-    constructor() {
-        this.reset(true);
+function proxima() {
+
+    if (atual >= paginas.length - 1) {
+        return;
     }
 
-    reset(inicio = false) {
+    /* Página atual vira */
 
-        const t = Math.random() * Math.PI * 2;
+    paginas[atual]
+        .classList
+        .remove("ativa");
 
-        // Fórmula do coração
-        const x =
-            16 * Math.pow(Math.sin(t), 3);
+    paginas[atual]
+        .classList
+        .add("virada");
 
-        const y =
-            13 * Math.cos(t)
-            - 5 * Math.cos(2 * t)
-            - 2 * Math.cos(3 * t)
-            - Math.cos(4 * t);
 
-        // Preenche o coração
-        const preenchimento = Math.sqrt(Math.random());
+    /* Avança */
 
-        this.baseX = x * preenchimento;
-        this.baseY = y * preenchimento;
+    atual++;
 
-        this.scale = Math.min(width, height) / 38;
 
-        this.targetX = this.baseX * this.scale;
-        this.targetY = -this.baseY * this.scale;
+    /* Mostra próxima página */
 
-        // Posição inicial espalhada
-        if (inicio) {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-        } else {
-            this.x = width / 2;
-            this.y = height / 2;
+    paginas[atual]
+        .classList
+        .remove("esperando");
+
+    paginas[atual]
+        .classList
+        .add("ativa");
+
+
+    /* Atualiza contador */
+
+    numero.textContent =
+        atual + 1;
+
+
+    /* Explosão de corações */
+
+    criarCoracoes();
+}
+
+
+/* =========================
+   RECOMEÇAR
+========================= */
+
+function reiniciar() {
+
+    paginas.forEach(
+        pagina => {
+
+            pagina.classList.remove(
+                "ativa",
+                "virada"
+            );
+
+            pagina.classList.add(
+                "esperando"
+            );
+
         }
-
-        this.size = Math.random() * 2.2 + 0.6;
-
-        this.alpha = Math.random() * 0.7 + 0.3;
-
-        this.angle = Math.random() * Math.PI * 2;
-
-        this.floatSpeed =
-            Math.random() * 0.02 + 0.005;
-
-        this.offset =
-            Math.random() * Math.PI * 2;
-    }
-
-    update() {
-
-        const tempo = Date.now() * 0.003;
-
-        // Pulsação do coração
-        const pulse =
-            1 + Math.sin(tempo) * 0.06;
-
-        const centerX = width / 2;
-        const centerY = height / 2;
-
-        const targetX =
-            centerX + this.targetX * pulse;
-
-        const targetY =
-            centerY + this.targetY * pulse;
-
-        // Movimento suave até o coração
-        this.x +=
-            (targetX - this.x) * 0.035;
-
-        this.y +=
-            (targetY - this.y) * 0.035;
-
-        // Flutuação
-        this.x +=
-            Math.cos(this.angle) * 0.12;
-
-        this.y +=
-            Math.sin(this.angle) * 0.12;
-
-        this.angle += this.floatSpeed;
-    }
-
-    draw() {
-
-        ctx.beginPath();
-
-        ctx.arc(
-            this.x,
-            this.y,
-            this.size,
-            0,
-            Math.PI * 2
-        );
-
-        // Variação entre rosa e vermelho
-        const brilho =
-            Math.random() > 0.96;
-
-        ctx.fillStyle = brilho
-            ? `rgba(255, 255, 255, ${this.alpha})`
-            : `rgba(255, 30, 90, ${this.alpha})`;
-
-        ctx.shadowBlur = brilho ? 25 : 12;
-        ctx.shadowColor =
-            brilho ? "#ffffff" : "#ff1744";
-
-        ctx.fill();
-
-        ctx.shadowBlur = 0;
-    }
-}
-
-
-// Quantidade de partículas
-const quantidade = 2500;
-
-for (let i = 0; i < quantidade; i++) {
-    particles.push(new Particle());
-}
-
-
-// Algumas partículas extras espalhadas
-const estrelas = [];
-
-for (let i = 0; i < 150; i++) {
-
-    estrelas.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 1.5,
-        alpha: Math.random(),
-        velocidade: Math.random() * 0.02
-    });
-}
-
-
-function desenharEstrelas() {
-
-    estrelas.forEach(estrela => {
-
-        estrela.alpha += estrela.velocidade;
-
-        if (estrela.alpha > 1 ||
-            estrela.alpha < 0.1) {
-            estrela.velocidade *= -1;
-        }
-
-        ctx.beginPath();
-
-        ctx.arc(
-            estrela.x,
-            estrela.y,
-            estrela.size,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle =
-            `rgba(255,255,255,${estrela.alpha})`;
-
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = "#ffffff";
-
-        ctx.fill();
-
-        ctx.shadowBlur = 0;
-    });
-}
-
-
-function animate() {
-
-    // Rastro suave
-    ctx.fillStyle =
-        "rgba(0, 0, 0, 0.20)";
-
-    ctx.fillRect(
-        0,
-        0,
-        width,
-        height
     );
 
-    desenharEstrelas();
 
-    particles.forEach(particle => {
-        particle.update();
-        particle.draw();
-    });
+    atual = 0;
 
-    requestAnimationFrame(animate);
+
+    paginas[0]
+        .classList
+        .remove("esperando");
+
+    paginas[0]
+        .classList
+        .add("ativa");
+
+
+    numero.textContent = "1";
 }
 
-animate();
+
+/* =========================
+   CRIAR CORAÇÃO
+========================= */
+
+function criarCoracao() {
+
+    const coracao =
+        document.createElement("div");
+
+
+    coracao.className =
+        "flutuante";
+
+
+    coracao.textContent =
+        "♥";
+
+
+    coracao.style.left =
+        Math.random() * 100 + "vw";
+
+
+    coracao.style.fontSize =
+        (Math.random() * 25 + 12) + "px";
+
+
+    document.body.appendChild(
+        coracao
+    );
+
+
+    setTimeout(() => {
+
+        coracao.remove();
+
+    }, 5000);
+}
+
+
+/* =========================
+   VÁRIOS CORAÇÕES
+========================= */
+
+function criarCoracoes() {
+
+    for (
+        let i = 0;
+        i < 8;
+        i++
+    ) {
+
+        setTimeout(
+            criarCoracao,
+            i * 100
+        );
+
+    }
+}
+
+
+/* =========================
+   CORAÇÕES AUTOMÁTICOS
+========================= */
+
+setInterval(() => {
+
+    criarCoracao();
+
+}, 1800);
+
+
+/* =========================
+   TECLADO
+========================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key === "Enter"
+        ) {
+
+            proxima();
+
+        }
+
+    }
+);
+
+
+/* =========================
+   ESTRELAS
+========================= */
+
+for (
+    let i = 0;
+    i < 35;
+    i++
+) {
+
+    const estrela =
+        document.createElement("div");
+
+
+    estrela.className =
+        "estrela";
+
+
+    estrela.style.left =
+        Math.random() * 100 + "vw";
+
+
+    estrela.style.top =
+        Math.random() * 100 + "vh";
+
+
+    estrela.style.animationDelay =
+        Math.random() * 3 + "s";
+
+
+    document.body.appendChild(
+        estrela
+    );
+}
