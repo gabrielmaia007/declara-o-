@@ -1,0 +1,509 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #4b0b22 0%,
+            #17030b 55%,
+            #030104 100%
+        );
+}
+
+
+/* FUNDO */
+
+.fundo {
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 40, 100, .18),
+            transparent 60%
+        );
+}
+
+
+/* ESTRELAS */
+
+.estrela {
+    position: fixed;
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0 0 8px white;
+
+    animation:
+        piscar 3s infinite alternate;
+
+    pointer-events: none;
+}
+
+@keyframes piscar {
+
+    from {
+        opacity: .2;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* LIVRO */
+
+.livro {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    perspective: 1800px;
+}
+
+
+/* PÁGINAS */
+
+.pagina {
+    position: absolute;
+
+    width: min(850px, 92vw);
+    height: min(700px, 88vh);
+
+    padding: 25px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    transform-origin: left center;
+
+    transform-style: preserve-3d;
+
+    backface-visibility: hidden;
+
+    transition:
+        transform 1.1s cubic-bezier(.65, .05, .36, 1),
+        opacity .8s ease;
+}
+
+
+/* PÁGINA ATUAL */
+
+.pagina.ativa {
+    z-index: 10;
+
+    transform:
+        rotateY(0deg);
+
+    opacity: 1;
+}
+
+
+/* PÁGINA VIRADA */
+
+.pagina.virada {
+    transform:
+        rotateY(-180deg);
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+
+/* PÁGINA ESPERANDO */
+
+.pagina.esperando {
+    z-index: 1;
+
+    transform:
+        rotateY(0deg);
+
+    opacity: 0;
+}
+
+
+/* CARTA */
+
+.carta {
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+
+    padding: 45px 35px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, .10),
+            rgba(255, 255, 255, .035)
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .18);
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        15px 20px 60px
+        rgba(0, 0, 0, .65),
+
+        0 0 60px
+        rgba(255, 20, 70, .15);
+
+    position: relative;
+}
+
+
+/* BORDA INTERNA */
+
+.carta::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 12px;
+
+    border:
+        1px solid
+        rgba(255, 170, 190, .15);
+
+    border-radius: 8px;
+
+    pointer-events: none;
+}
+
+
+/* CORAÇÃO */
+
+.coracao {
+    font-size: 85px;
+
+    color: #ff315f;
+
+    text-shadow:
+        0 0 10px #ff315f,
+        0 0 30px #ff1744,
+        0 0 65px #ff1744;
+
+    animation:
+        pulsar 1.3s infinite;
+}
+
+@keyframes pulsar {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+
+/* TÍTULOS */
+
+h1 {
+    margin-top: 10px;
+
+    font-size:
+        clamp(55px, 10vw, 105px);
+
+    text-shadow:
+        0 0 20px #ff1744,
+        0 0 50px #ff1744;
+}
+
+h2 {
+    margin-bottom: 25px;
+
+    font-size:
+        clamp(30px, 6vw, 55px);
+
+    color: white;
+
+    text-shadow:
+        0 0 20px
+        rgba(255, 40, 90, .6);
+}
+
+h3 {
+    margin-top: 25px;
+
+    font-size:
+        clamp(25px, 5vw, 45px);
+
+    color: #ffb4c5;
+
+    text-shadow:
+        0 0 20px #ff1744;
+}
+
+
+/* TEXTOS */
+
+.subtitulo {
+    margin-top: 10px;
+
+    font-size: 20px;
+
+    color: #ddd;
+}
+
+.texto {
+    max-width: 700px;
+
+    margin: 14px auto;
+
+    font-size: 19px;
+
+    line-height: 1.8;
+
+    color: #eee;
+}
+
+.destaque {
+    margin-top: 25px;
+
+    color: #ffb4c5;
+
+    font-size: 19px;
+
+    font-style: italic;
+
+    line-height: 1.7;
+}
+
+
+/* VERSÍCULO */
+
+.versiculo {
+    max-width: 650px;
+
+    margin: 25px auto;
+
+    padding: 22px;
+
+    border-left:
+        2px solid #ff315f;
+
+    border-right:
+        2px solid #ff315f;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255, 255, 255, .04);
+}
+
+.versiculo p {
+    font-size: 19px;
+
+    line-height: 1.7;
+
+    font-style: italic;
+}
+
+.versiculo strong {
+    display: block;
+
+    margin-top: 10px;
+
+    color: #ff8da6;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+}
+
+
+/* BOTÃO */
+
+button {
+    margin-top: 25px;
+
+    padding:
+        15px 30px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff1744,
+            #a50032
+        );
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 25px
+        rgba(255, 20, 70, .35);
+
+    transition: .3s;
+}
+
+button:hover {
+    transform:
+        translateY(-4px)
+        scale(1.05);
+
+    box-shadow:
+        0 0 45px
+        rgba(255, 20, 70, .75);
+}
+
+
+/* CORAÇÕES FLUTUANTES */
+
+.flutuante {
+    position: fixed;
+
+    bottom: -40px;
+
+    color: #ff315f;
+
+    pointer-events: none;
+
+    z-index: 50;
+
+    text-shadow:
+        0 0 15px #ff1744;
+
+    animation:
+        subir 5s linear forwards;
+}
+
+@keyframes subir {
+
+    from {
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+        opacity: .8;
+    }
+
+    to {
+        transform:
+            translateY(-110vh)
+            rotate(360deg);
+
+        opacity: 0;
+    }
+}
+
+
+/* CONTADOR */
+
+.contador {
+    position: fixed;
+
+    bottom: 15px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+    color: #aaa;
+
+    z-index: 100;
+}
+
+
+/* CELULAR */
+
+@media (max-width: 600px) {
+
+    .pagina {
+        width: 96vw;
+
+        height: 90vh;
+
+        padding: 10px;
+    }
+
+    .carta {
+        padding:
+            35px 20px;
+    }
+
+    .texto {
+        font-size: 17px;
+
+        line-height: 1.65;
+    }
+
+    .versiculo p {
+        font-size: 17px;
+    }
+
+    .coracao {
+        font-size: 65px;
+    }
+}
